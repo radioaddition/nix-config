@@ -22,25 +22,21 @@
 	  lanzaboote.nixosModules.lanzaboote
           ./hosts/aspirem/configuration.nix
           ./hosts/aspirem/hardware-configuration.nix
-	  home-manager.nixosModules.home-manager {
-	    home-manager.useGlobalPkgs = true;
-	    home-manager.useUserPackages = true;
-	    home-manager.users.radioaddition = [ import ./hosts/aspirem/home.nix ];
           }
 	];
       };
       galith = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
         specialArgs = { inherit inputs; };
-        modules = [
-          ./hosts/galith/configuration.nix
-          ./hosts/galith/hardware-configuration.nix
-#	  home-manager.nixosModules.home-manager {
-#	    home-manager.useGlobalPkgs = true;
-#	    home-manager.useUserPackages = true;
-#	    home-manager.users.radioaddition = [ import ./hosts/galith/home.nix ];
-#	  }
-        ];
+        modules = myLib.importUtils.importAll [
+	  ./sys
+	  ./wm
+	  #./env
+        ] ++ [
+	  ./apps/system.nix
+	  ./apps/user.nix
+	  #./hosts/denver.nix
+	];
       };
     };
     nixOnDroidConfigurations = {
