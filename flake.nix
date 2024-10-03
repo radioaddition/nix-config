@@ -32,7 +32,6 @@
 	  ./sys
 	  ./wm
 	  #./env
-        ] ++ [
 	  ./apps/system.nix
 	  ./apps/user.nix
 	  #./hosts/denver.nix
