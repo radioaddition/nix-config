@@ -14,6 +14,8 @@
       url = "github:nix-community/disko";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+# Commented the firefox parts because I'm not sure if the modules will also work with Librewolf, more research required
 #    firefox-addons = {
 #      url = "gitlab:rycee/nur-expressions?dir=pkgs/firefox-addons";
 #      inputs.nixpkgs.follows = "nixpkgs";
