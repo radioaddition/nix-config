@@ -13,79 +13,84 @@
     };
   };
 
-  outputs = inputs@{ self, nixpkgs, lanzaboote, home-manager, unstable, nix-on-droid, ... }: {
-    nixosConfigurations = {
-      aspirem = nixpkgs.lib.nixosSystem {
-        system = "x86_64-linux";
-        specialArgs = {inherit inputs;};
-        modules = [
-	  lanzaboote.nixosModules.lanzaboote
-          ./hosts/aspirem/configuration.nix
-          ./hosts/aspirem/hardware-configuration.nix
-	];
+  let
+    llakalasImportUtils = import ./custom/importUtils.nix;
+  in
+  {
+    outputs = inputs@{ self, nixpkgs, lanzaboote, home-manager, unstable, nix-on-droid, ... }: {
+      nixosConfigurations = {
+        aspirem = nixpkgs.lib.nixosSystem {
+          system = "x86_64-linux";
+          specialArgs = {inherit inputs;};
+          modules = [
+  	  lanzaboote.nixosModules.lanzaboote
+            ./hosts/aspirem/configuration.nix
+            ./hosts/aspirem/hardware-configuration.nix
+  	];
+        };
+        galith = nixpkgs.lib.nixosSystem {
+          system = "x86_64-linux";
+          specialArgs = { inherit inputs; };
+          modules = myLib.importUtils.importAll [
+  	  ./sys
+  	  ./wm/gnome.nix
+  	  #./env
+  	  ./apps/system.nix
+  	  ./apps/user.nix
+  	  #./hosts/denver.nix
+  	];
+        };
       };
-      galith = nixpkgs.lib.nixosSystem {
-        system = "x86_64-linux";
-        specialArgs = { inherit inputs; };
-        modules = myLib.importUtils.importAll [
-	  ./sys
-	  ./wm/gnome.nix
-	  #./env
-	  ./apps/system.nix
-	  ./apps/user.nix
-	  #./hosts/denver.nix
-	];
+      nixOnDroidConfigurations = {
+        "oriole" = nix-on-droid.lib.nixOnDroidConfiguration {
+          pkgs = import nixpkgs { system = "aarch64-linux"; };
+          extraSpecialArgs = { inherit inputs; };
+          modules = [ ./hosts/oriole/configuration.nix ];
+        };
       };
-    };
-    nixOnDroidConfigurations = {
-      "oriole" = nix-on-droid.lib.nixOnDroidConfiguration {
-        pkgs = import nixpkgs { system = "aarch64-linux"; };
-        extraSpecialArgs = { inherit inputs; };
-        modules = [ ./hosts/oriole/configuration.nix ];
-      };
-    };
-    homeConfigurations = {
-      "aspirem" = home-manager.lib.homeManagerConfiguration {
-        extraSpecialArgs = {inherit inputs;};
-        pkgs = nixpkgs.legacyPackages."x86_64-linux";
-        modules = [
-          ./hosts/aspirem/home.nix
-        ];
-      };
-      "aspirem-secureblue" = home-manager.lib.homeManagerConfiguration {
-        extraSpecialArgs = {inherit inputs;};
-        pkgs = nixpkgs.legacyPackages."x86_64-linux";
-        modules = [
-          ./hosts/aspirem-secureblue/home.nix
-        ];
-      };
-      "oriole" = home-manager.lib.homeManagerConfiguration {
-        extraSpecialArgs = {inherit inputs;};
-        pkgs = nixpkgs.legacyPackages."aarch64-linux";
-        modules = [
-          ./hosts/oriole/home.nix
-        ];
-      };
-      "galith" = home-manager.lib.homeManagerConfiguration {
-  	extraSpecialArgs = {inherit inputs;};
-        pkgs = nixpkgs.legacyPackages."x86_64-linux";
-        modules = [
-          ./hosts/galith/home.nix
-        ];
-      };
-      "deck" = home-manager.lib.homeManagerConfiguration {
-  	extraSpecialArgs = {inherit inputs;};
-        pkgs = nixpkgs.legacyPackages."x86_64-linux";
-        modules = [
-          ./hosts/deck/home.nix
-        ];
-      };
-      "air2020" = home-manager.lib.homeManagerConfiguration {
-        extraSpecialArgs = {inherit inputs;};
-        pkgs = nixpkgs.legacyPackages."x86_64-darwin";
-        modules = [
-          ./hosts/air2020/home.nix
-        ];
+      homeConfigurations = {
+        "aspirem" = home-manager.lib.homeManagerConfiguration {
+          extraSpecialArgs = {inherit inputs;};
+          pkgs = nixpkgs.legacyPackages."x86_64-linux";
+          modules = [
+            ./hosts/aspirem/home.nix
+          ];
+        };
+        "aspirem-secureblue" = home-manager.lib.homeManagerConfiguration {
+          extraSpecialArgs = {inherit inputs;};
+          pkgs = nixpkgs.legacyPackages."x86_64-linux";
+          modules = [
+            ./hosts/aspirem-secureblue/home.nix
+          ];
+        };
+        "oriole" = home-manager.lib.homeManagerConfiguration {
+          extraSpecialArgs = {inherit inputs;};
+          pkgs = nixpkgs.legacyPackages."aarch64-linux";
+          modules = [
+            ./hosts/oriole/home.nix
+          ];
+        };
+        "galith" = home-manager.lib.homeManagerConfiguration {
+    	extraSpecialArgs = {inherit inputs;};
+          pkgs = nixpkgs.legacyPackages."x86_64-linux";
+          modules = [
+            ./hosts/galith/home.nix
+          ];
+        };
+        "deck" = home-manager.lib.homeManagerConfiguration {
+    	extraSpecialArgs = {inherit inputs;};
+          pkgs = nixpkgs.legacyPackages."x86_64-linux";
+          modules = [
+            ./hosts/deck/home.nix
+          ];
+        };
+        "air2020" = home-manager.lib.homeManagerConfiguration {
+          extraSpecialArgs = {inherit inputs;};
+          pkgs = nixpkgs.legacyPackages."x86_64-darwin";
+          modules = [
+            ./hosts/air2020/home.nix
+          ];
+        };
       };
     };
   };
