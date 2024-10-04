@@ -22,12 +22,10 @@ let
 
     modules = myLib.importUtils.importAll # Use custom function to allow importing all nix files within a folder
     [
-      ../base/core
-      ../base/features
-      ../base/gnome
-      ../base/modules
-      ../base/terminal
-      ../base/baseVars.nix
+      ../sys
+      ../apps
+      ../env
+      ../wm
 
       ../apps/cli
       ../apps/gui

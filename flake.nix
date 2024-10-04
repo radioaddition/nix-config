@@ -22,7 +22,6 @@
 	  lanzaboote.nixosModules.lanzaboote
           ./hosts/aspirem/configuration.nix
           ./hosts/aspirem/hardware-configuration.nix
-          }
 	];
       };
       galith = nixpkgs.lib.nixosSystem {
@@ -30,7 +29,7 @@
         specialArgs = { inherit inputs; };
         modules = myLib.importUtils.importAll [
 	  ./sys
-	  ./wm
+	  ./wm/gnome.nix
 	  #./env
 	  ./apps/system.nix
 	  ./apps/user.nix
