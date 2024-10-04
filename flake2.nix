@@ -40,9 +40,9 @@
     # Declare nixosConfigurations within the let expression so we can reuse it for homeConfigurations
     nixosConfigurations = builtins.mapAttrs myLib.mkNixos # Run mkNixos for each homeConfiguration, with key passed as host
     {
-      framework.system = "x86_64-linux";
-
-      desktop.system = "x86_64-linux";
+      denver.system = "x86_64-linux";
+      bogota.system = "x86_64-linux";
+      tokyo.system = "x86_64-linux";
     };
 
   in
@@ -51,7 +51,9 @@
 
     homeConfigurations = builtins.mapAttrs myLib.mkHome # Run mkHome for each homeConfiguration, with key passed as userhost
     {
-      "emanresu@framework" = { inherit nixosConfigurations; };
+      "radioaddition@denver" = { inherit nixosConfigurations; };
+      "radioaddition@bogota" = { inherit nixosConfigurations; };
+      "radioaddition@tokyo" = { inherit nixosConfigurations; };
     };
   };
 }
